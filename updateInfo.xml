@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateinfo>
+    <version>1.0.1</version>
+    <url encrypted="false">https://we-bucket.oss-cn-shenzhen.aliyuncs.com/App/Stone%20Weather/Update/Archive/Stone%20Weather%201.2.1.zip</url>
+    <forced>forceddownload</forced>
+    <checksum algorithm="MD5">8cb9174a08d1088b29ead6c884b84d1e</checksum>
+    <changelog>https://www.baidu.com</changelog>
+</updateinfo>
