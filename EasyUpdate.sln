@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyUpdate.ZipExtractor", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7D8B58E9-8F7C-46F0-9D4D-E721EFDB0641}"
 	ProjectSection(SolutionItems) = preProject
+		docs\Nuget\Nuget-README-1.0.0.md = docs\Nuget\Nuget-README-1.0.0.md
 		README.md = README.md
 	EndProjectSection
 EndProject
