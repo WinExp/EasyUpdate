@@ -19,26 +19,25 @@ namespace EasyUpdate
         {
             UpdateInfo updateInfo = (UpdateInfo)new XmlSerializer(typeof(UpdateInfo))
                 .Deserialize(new StringReader(await WebRequests.GetStringAsync(url)));
-            updateInfo.IsUpdateAvailable = Version.Parse(updateInfo.Version) > Assembly.GetEntryAssembly().GetName().Version;
+            //updateInfo.IsUpdateAvailable = Version.Parse(updateInfo.Version) > Assembly.GetEntryAssembly().GetName().Version;
             return updateInfo;
         }
 
         public static async Task<DownloadInfo> DownloadUpdate(UpdateInfo updateInfo)
         {
-            string tempPath = Path.Combine(Path.GetTempPath(), "EasyUpdate");
-            return await WebRequests.DownloadFile(updateInfo.Url.Url, tempPath);
+            return await WebRequests.DownloadFile(updateInfo.Url.Url, "downloads");
         }
 
         public static async Task StartUpdateAsync(UpdateInfo updateInfo)
         {
             string tempPath = Path.Combine(Path.GetTempPath(), "EasyUpdate");
             (await WebRequests.DownloadFile("https://we-bucket.oss-cn-shenzhen.aliyuncs.com/Project/Download/EasyUpdate/ZipExtractor/EasyUpdate.ZipExtractor.exe",
-    "downloads")).Wait();
+    tempPath)).Wait();
             Process.Start(new ProcessStartInfo
             {
                 CreateNoWindow = true,
                 FileName = Path.Combine(tempPath, "EasyUpdate.ZipExtractor.exe"),
-                Arguments = $"\"{Path.Combine(tempPath, Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" \"{AppDomain.CurrentDomain.BaseDirectory}\""
+                Arguments = $"\"{Path.Combine("downloads", Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" \"{AppDomain.CurrentDomain.BaseDirectory}\""
             });
             Exit();
         }
