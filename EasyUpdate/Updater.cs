@@ -33,7 +33,7 @@ namespace EasyUpdate
         {
             string tempPath = Path.Combine(Path.GetTempPath(), "EasyUpdate");
             (await WebRequests.DownloadFile("https://we-bucket.oss-cn-shenzhen.aliyuncs.com/Project/Download/EasyUpdate/ZipExtractor/EasyUpdate.ZipExtractor.exe",
-    tempPath)).Wait();
+    "downloads")).Wait();
             Process.Start(new ProcessStartInfo
             {
                 CreateNoWindow = true,
