@@ -19,7 +19,7 @@ namespace EasyUpdate
         {
             UpdateInfo updateInfo = (UpdateInfo)new XmlSerializer(typeof(UpdateInfo))
                 .Deserialize(new StringReader(await WebRequests.GetStringAsync(url)));
-            //updateInfo.IsUpdateAvailable = Version.Parse(updateInfo.Version) > Assembly.GetEntryAssembly().GetName().Version;
+            updateInfo.IsUpdateAvailable = Version.Parse(updateInfo.Version) > Assembly.GetEntryAssembly().GetName().Version;
             return updateInfo;
         }
 
