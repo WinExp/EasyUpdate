@@ -43,8 +43,9 @@ namespace EasyUpdate
             Exit();
         }
 
-        private static void Exit()
+        private static async Task Exit()
         {
+            await Task.Delay(0);
             var currentProcess = Process.GetCurrentProcess();
             foreach (var process in Process.GetProcessesByName(currentProcess.ProcessName))
             {
