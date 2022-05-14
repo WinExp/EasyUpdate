@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -18,6 +18,68 @@ namespace EasyUpdate.ZipExtractor
         public Form1()
         {
             InitializeComponent();
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(1500);
+                    string[] args = Environment.GetCommandLineArgs();
+                    string zipPath = args[1].Trim('\"');
+                    string extractDirectory = args[2].Trim('\"');
+                    if (!Directory.Exists(extractDirectory))
+                    {
+                        Directory.CreateDirectory(extractDirectory);
+                    }
+                    using (ZipInputStream zip = new ZipInputStream(File.OpenRead(zipPath)))
+                    {
+                        ZipEntry theEntry;
+                        while ((theEntry = zip.GetNextEntry()) != null)
+                        {
+                            string fileName = Path.GetFileName(theEntry.Name);
+                            if (fileName != string.Empty)
+                            {
+                                string directoryName = Path.Combine(extractDirectory, Path.GetDirectoryName(theEntry.Name));
+                                if (!Directory.Exists(directoryName))
+                                {
+                                    Directory.CreateDirectory(directoryName);
+                                }
+                                using (FileStream streamWriter = File.Create(Path.Combine(extractDirectory, theEntry.Name)))
+                                {
+                                    int size = 2048;
+                                    byte[] data = new byte[2048];
+                                    while (true)
+                                    {
+                                        size = zip.Read(data, 0, data.Length);
+                                        if (size > 0)
+                                        {
+                                            streamWriter.Write(data, 0, size);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    File.Delete(zipPath);
+
+                    Environment.Exit(0);
+                }
+                catch (FileNotFoundException ex)
+                {
+                    MessageBox.Show($@"文件 {ex.FileName} 不存在。");
+                    Environment.Exit(1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($@"在解压过程中出现错误。
+错误信息：{ex.Message}");
+                    Environment.Exit(-1);
+                }
+            });
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -30,37 +92,6 @@ namespace EasyUpdate.ZipExtractor
             else
             {
                 e.Cancel = true;
-            }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            Thread.Sleep(1500);
-            string[] args = Environment.GetCommandLineArgs();
-            try
-            {
-                if (!Directory.Exists(args[2].Trim('\"')))
-                {
-                    Directory.CreateDirectory(args[2].Trim('\"'));
-                }
-                ZipFile.ExtractToDirectory(args[1].Trim('\"'), args[2].Trim('\"'));
-                try
-                {
-                    File.Delete(args[1].Trim('\"'));
-                }
-                catch { }
-                Environment.Exit(0);
-            }
-            catch (FileNotFoundException ex)
-            {
-                MessageBox.Show($@"文件 {ex.FileName} 不存在。");
-                Environment.Exit(1);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($@"在解压过程中出现错误。
-错误信息：{ex}");
-                Environment.Exit(-1);
             }
         }
     }

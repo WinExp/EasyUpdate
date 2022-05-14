@@ -29,7 +29,7 @@ namespace EasyUpdate
             return await WebRequests.DownloadFile(updateInfo.Url.Url, tempPath);
         }
 
-        public static async Task StartUpdateAsync(UpdateInfo updateInfo, bool AutoExit = true)
+        public static async Task StartUpdateAsync(UpdateInfo updateInfo)
         {
             string tempPath = Path.Combine(Path.GetTempPath(), "EasyUpdate");
             (await WebRequests.DownloadFile("https://we-bucket.oss-cn-shenzhen.aliyuncs.com/Project/Download/EasyUpdate/ZipExtractor/EasyUpdate.ZipExtractor.exe",
@@ -40,10 +40,7 @@ namespace EasyUpdate
                 FileName = Path.Combine(tempPath, "EasyUpdate.ZipExtractor.exe"),
                 Arguments = $"\"{Path.Combine(tempPath, Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" \"{AppDomain.CurrentDomain.BaseDirectory}\""
             });
-            if (AutoExit)
-            {
-                Exit();
-            }
+            Exit();
         }
 
         private static void Exit()
@@ -58,12 +55,9 @@ namespace EasyUpdate
                 }
                 catch (Win32Exception)
                 {
-                    // Current process should be same as processes created by other instances of the application so it should be able to access modules of other instances. 
-                    // This means this is not the process we are looking for so we can safely skip this.
                     continue;
                 }
 
-                //get all instances of assembly except current
                 if (process.Id != currentProcess.Id && currentProcess.MainModule?.FileName == processPath)
                 {
                     if (process.CloseMainWindow())

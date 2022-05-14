@@ -36,7 +36,7 @@ namespace EasyUpdate
             DownloadConfiguration downloadConfig = new DownloadConfiguration
             {
                 BufferBlockSize = 10240,
-                ChunkCount = (int)Math.Ceiling((double)fileLength / 8388608),
+                ChunkCount = (int)Math.Ceiling((double)fileLength / 4194304),
                 Timeout = timeout,
                 MaxTryAgainOnFailover = int.MaxValue,
                 OnTheFlyDownload = false,
