@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
@@ -39,7 +35,7 @@ namespace EasyUpdate
                 FileName = Path.Combine(tempPath, "EasyUpdate.ZipExtractor.exe"),
                 Arguments = $"\"{Path.Combine("downloads", Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" " +
                 $"\"{AppDomain.CurrentDomain.BaseDirectory}\" " +
-                $"\"{Assembly.GetEntryAssembly().Location}\""
+                $"\"{Process.GetCurrentProcess().MainModule.FileName}\""
             });
             Exit();
         }
