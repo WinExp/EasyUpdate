@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace EasyUpdate.ZipExtractor
                     string[] args = Environment.GetCommandLineArgs();
                     string zipPath = args[1].Trim('\"');
                     string extractDirectory = args[2].Trim('\"');
+                    string startFilePath = args[3].Trim('\"');
                     if (!Directory.Exists(extractDirectory))
                     {
                         Directory.CreateDirectory(extractDirectory);
@@ -65,6 +67,8 @@ namespace EasyUpdate.ZipExtractor
                     }
 
                     File.Delete(zipPath);
+
+                    Process.Start(startFilePath);
 
                     Environment.Exit(0);
                 }

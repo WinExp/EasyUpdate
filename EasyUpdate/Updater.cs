@@ -37,7 +37,9 @@ namespace EasyUpdate
             {
                 CreateNoWindow = true,
                 FileName = Path.Combine(tempPath, "EasyUpdate.ZipExtractor.exe"),
-                Arguments = $"\"{Path.Combine("downloads", Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" \"{AppDomain.CurrentDomain.BaseDirectory}\""
+                Arguments = $"\"{Path.Combine("downloads", Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" " +
+                $"\"{AppDomain.CurrentDomain.BaseDirectory}\" " +
+                $"\"{Assembly.GetEntryAssembly().Location}\""
             });
             Exit();
         }
