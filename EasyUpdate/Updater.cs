@@ -29,13 +29,16 @@ namespace EasyUpdate
             string tempPath = Path.Combine(Path.GetTempPath(), "EasyUpdate");
             (await WebRequests.DownloadFile("https://we-bucket.oss-cn-shenzhen.aliyuncs.com/Project/Download/EasyUpdate/ZipExtractor/EasyUpdate.ZipExtractor.exe",
     tempPath)).Wait();
+            string startFilePath = Process.GetCurrentProcess().MainModule.FileName;
+            string extractPath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "downloads"), Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)));
+            string arguments = '|' + extractPath +
+                '|' + AppDomain.CurrentDomain.BaseDirectory +
+                '|' + startFilePath;
             Process.Start(new ProcessStartInfo
             {
                 CreateNoWindow = true,
                 FileName = Path.Combine(tempPath, "EasyUpdate.ZipExtractor.exe"),
-                Arguments = $"\"{Path.Combine("downloads", Path.GetFileName(HttpUtility.UrlDecode(updateInfo.Url.Url)))}\" " +
-                $"\"{AppDomain.CurrentDomain.BaseDirectory}\" " +
-                $"\"{Process.GetCurrentProcess().MainModule.FileName}\""
+                Arguments = arguments
             });
             Exit();
         }

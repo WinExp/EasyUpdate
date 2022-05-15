@@ -1,7 +1,9 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,10 +19,17 @@ namespace EasyUpdate.ZipExtractor
                 try
                 {
                     await Task.Delay(1500);
-                    string[] args = Environment.GetCommandLineArgs();
-                    string zipPath = args[1].Trim('\"');
-                    string extractDirectory = args[2].Trim('\"');
-                    string startFilePath = args[3].Trim('\"');
+                    string[] inputArgs = Environment.GetCommandLineArgs();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    foreach (string arg in inputArgs)
+                    {
+                        stringBuilder.Append(arg);
+                        stringBuilder.Append(' ');
+                    }
+                    string[] args = stringBuilder.ToString().Trim().Split('|');
+                    string zipPath = args[1];
+                    string extractDirectory = args[2];
+                    string startFilePath = args[3];
                     if (!Directory.Exists(extractDirectory))
                     {
                         Directory.CreateDirectory(extractDirectory);
