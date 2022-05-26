@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
@@ -11,6 +12,11 @@ namespace EasyUpdate
 {
     public static class Updater
     {
+        /// <summary>
+        /// Get Update Info.
+        /// </summary>
+        /// <param name="url">Url.</param>
+        /// <returns>Update Info.</returns>
         public static async Task<UpdateInfo> GetUpdateInfoAsync(string url)
         {
             UpdateInfo updateInfo = (UpdateInfo)new XmlSerializer(typeof(UpdateInfo))
@@ -19,13 +25,26 @@ namespace EasyUpdate
             return updateInfo;
         }
 
+        /// <summary>
+        /// Download update.
+        /// </summary>
+        /// <param name="updateInfo">Update Info.</param>
         public static async Task<DownloadInfo> DownloadUpdate(UpdateInfo updateInfo)
         {
             return await WebRequests.DownloadFile(updateInfo.Url.Url, "downloads");
         }
 
+        /// <summary>
+        /// Start update.
+        /// </summary>
+        /// <param name="updateInfo">Update Info.</param>
+        /// <exception cref="CryptographicException"></exception>
         public static async Task StartUpdateAsync(UpdateInfo updateInfo)
         {
+            if (updateInfo.Checksum.Value != Crypto.Hash.ComputeFileHash("downloads", updateInfo.Checksum.Algorithm))
+            {
+                throw new CryptographicException("Hash value error.");
+            }
             string tempPath = Path.Combine(Path.GetTempPath(), "EasyUpdate");
             (await WebRequests.DownloadFile("https://we-bucket.oss-cn-shenzhen.aliyuncs.com/Project/Download/EasyUpdate/ZipExtractor/EasyUpdate.ZipExtractor.exe",
     tempPath)).Wait();
